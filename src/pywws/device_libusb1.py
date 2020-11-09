@@ -80,7 +80,9 @@ class USBDevice(object):
         if sys.platform.startswith('linux'):
             if self.dev.kernelDriverActive(0):
                 self.dev.detachKernelDriver(0)
-        self.dev.resetDevice()
+        if not sys.platform.startswith('freebsd'):
+                # This results in a LIBUSB_ERROR_OTHER exception
+                self.dev.resetDevice()
         self.dev.claimInterface(0)
 
     def read_data(self, size):
